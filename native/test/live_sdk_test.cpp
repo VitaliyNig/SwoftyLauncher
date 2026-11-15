@@ -61,6 +61,10 @@ int main()
         CHECK(t && t->number == 1 && t->distance_ahead_m == 100.f);
         CHECK(live::track_turns().size() == 2);
         CHECK(live::team_badge(1) == std::string("ferrari_2026") && !live::team_badge(0));
+        CHECK(live::team_badge_texture(1) == std::string("#overrides.osd.timing_tower.team_badges_hud.ferrari_2026"));
+        fake.set_badge_texture(2, "eaid://ui_package/art/textures/render_badge_ePreLoaded 7");
+        CHECK(live::team_badge_texture(2) == std::string("eaid://ui_package/art/textures/render_badge_ePreLoaded 7"));
+        CHECK(!live::team_badge(2) && !live::team_badge_texture(0));
         auto o = live::order();
         CHECK(o.ids.size() == 3 && o.player_rank == 1 && o.ahead(0) && o.ahead(0)->vehicle == 1);
         CHECK(o.ahead(1) && o.ahead(1)->vehicle == 0 && !o.behind(2) && o.behind(1)->vehicle == 0);

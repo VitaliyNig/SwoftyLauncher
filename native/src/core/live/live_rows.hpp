@@ -80,6 +80,7 @@ inline constexpr bool F_BADGES = LIVE_HAS(GameModeSystem, mode) && LIVE_HAS(Game
                                  LIVE_HAS(TeamSlots, begin) && LIVE_HAS(TeamSlots, end) && LIVE_HAS(TeamSlot, record) &&
                                  LIVE_HAS(TeamRecord, timing_tower_texture_path) &&
                                  LIVE_HAS(TeamRecord, show_custom_badge_in_ui);
+inline constexpr bool F_BADGE_RENDER = F_BADGES && LIVE_HAS(SessionEntrantView, badge_stat_id);
 inline constexpr bool F_TRACK_NAME =
     LIVE_HAS(RacingVehicles, owner) && LIVE_HAS(RacingOwner, track) && LIVE_HAS(RacingTrack, name);
 
@@ -106,6 +107,7 @@ inline constexpr Row ROWS[G_COUNT] = {
     {G_TRACK_NAME, F_TRACK_NAME, true, "RacingVehicles.owner, RacingOwner.track and RacingTrack.name"},
     {G_SPECTATE_GAP, F_SPECTATE_GAP && F_REGISTRY, true, "SpectatorDirectorGap.gap_mode"},
     {G_BUS_EVENTS, true, true, "g_Game_MessageBus and Ne_Subscribe_BusMessage; the message layouts are the agreed Live_Subscribe_* rows (no signature, not resolved)"},
+    {G_BADGE_RENDER, F_BADGE_RENDER && F_REGISTRY, true, "the badges rows and SessionEntrantView.badge_stat_id"},
 };
 
 struct Needs {
@@ -136,6 +138,7 @@ inline constexpr Needs NEEDS[] = {
     {G_TRACK, {&Sites::track_length, &Sites::session_type}},
     {G_TRACK_NAME, {&Sites::track_world}},
     {G_BUS_EVENTS, {&Sites::bus_slot, &Sites::bus_subscribe}},
+    {G_BADGE_RENDER, {&Sites::game_manager, &Sites::key_game_mode, &Sites::key_team_tables}},
 };
 
 constexpr uint32_t bit(Group g)
@@ -157,7 +160,7 @@ inline constexpr uint32_t ALL_GROUPS = (1u << G_COUNT) - 1;
 
 inline constexpr BuildProof KB_BUILD = {1789118616u, "Steam", ALL_GROUPS, layout::progress::from_manager};
 
-inline constexpr uint32_t EA_GROUPS = ALL_GROUPS;
+inline constexpr uint32_t EA_GROUPS = ALL_GROUPS & ~bit(G_BADGE_RENDER);
 
 inline constexpr BuildProof EA_BUILD = {1789128892u, "EA", EA_GROUPS,
                                          runtime::game_manager::tail_field(layout::progress::from_manager, "ea")};

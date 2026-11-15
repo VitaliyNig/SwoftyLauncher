@@ -145,6 +145,16 @@ inline std::optional<std::string> team_badge(uint32_t vehicle)
     return std::string(key);
 }
 
+inline std::optional<std::string> team_badge_texture(uint32_t vehicle)
+{
+    auto t = detail::table();
+    char path[96] = {};
+    if (!t || t->version < 2 || !t->team_badge_texture ||
+        t->team_badge_texture(vehicle, path, sizeof path) != SWOFTY_ASSET_OK)
+        return std::nullopt;
+    return std::string(path);
+}
+
 inline std::optional<uint64_t> frame()
 {
     auto t = detail::table();
